@@ -75,12 +75,28 @@ class Game:
         person.hand.append(self.gamedeck.draw_card())
         self.player.show_hand()
 
+    def hit_or_stay(self):
+        """Ask for input from person"""
+        choice = input('Would you like to hit? y/n ')
+        while choice == 'y':
+            self.hit(self.player)
+            choice = input('Would you like to hit? y/n ')
+        
+            self.player.show_hand()
+
+    def hit_dealer(self, total):
+        while total <= 17:
+            self.hit(self.dealer)
+        else:
+            self.dealer.show_hand()
 
 
 game = Game(SUITS, SCORES)
 game.deal_cards()
 # gamedeck.show_cards()
-game.hit(game.player)
+# game.hit(game.player)
+game.hit_or_stay()
+
 
 # Still need to make funciton work for hit/stay
 # Need function to tally score

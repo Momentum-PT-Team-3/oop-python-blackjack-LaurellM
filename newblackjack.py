@@ -68,6 +68,8 @@ class Game:
         self.dealer.show_hand()
         self.player.show_hand()
 
+# This function is for when the dealer and player want another card (one).
+# Needs an if, elif, else statement for if the player wants to stay or be hit.
     def hit(self):
         self.dealer.hand.append(self.gamedeck.draw_card())
         self.player.hand.append(self.gamedeck.draw_card())
@@ -79,4 +81,10 @@ class Game:
 game = Game(SUITS, SCORES)
 game.deal_cards()
 # gamedeck.show_cards()
+# hit()
+
+# Still need to make funciton work for hit/stay
+# Need function to tally score
+# Need function to declare winner/loser
+
 

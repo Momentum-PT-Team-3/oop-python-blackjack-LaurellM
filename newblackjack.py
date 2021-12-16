@@ -1,7 +1,7 @@
 import random
 
 SUITS = ["♥️", "♦️", "☘️", "♠️"]
-VALUES = {2 : 2, 3 : 3, 4 : 4, 5 : 5, 6 : 6, 7 : 7, 8 : 8, 9 : 9, 10 : 10, "J" : 10, "Q" : 10, "K" : 10, "A" : 1}
+SCORES = {2 : 2, 3 : 3, 4 : 4, 5 : 5, 6 : 6, 7 : 7, 8 : 8, 9 : 9, 10 : 10, "J" : 10, "Q" : 10, "K" : 10, "A" : 1}
 
 class Player:
     def __init__(self):
@@ -12,10 +12,10 @@ class Player:
         return self.name
 
     def show_hand(self):
-        print("Player")
+        print(self.name)
         for card in self.hand:
             print(card)
-
+            
 class Dealer:
     def __init__(self):
         self.hand = []
@@ -29,13 +29,13 @@ class Dealer:
             print(card)
 
 class Card:
-    def __init__(self, suit, rank, value):
+    def __init__(self, suit, rank):
         self.suit = suit
         self.rank = rank
-        self.value= self.calculate_value(self.rank)
+        self.score= self.calculate_value(self.rank)
         
     def __str__(self):
-        return f'{self.rank} of {self.suit} {self.value}'
+        return f'{self.rank} of {self.suit} {self.score}'
 
     def calculate_value(self, rank):
         values_dictionary = {
@@ -57,12 +57,12 @@ class Card:
         return card_value
         
 class Deck:
-    def __init__(self, suits, values):
+    def __init__(self, suits, scores):
         self.cards = []
    
         for suit in suits:
-            for value in values.keys():
-                card = Card(suit, values.get(value))
+            for rank in scores.keys():
+                card = Card(suit, rank)
                 self.cards.append(card)
     
     def show_cards(self): 
@@ -79,10 +79,10 @@ class Deck:
         return card_score
    
 class Game:
-    def __init__(self, suits, values):
+    def __init__(self, suits, scores):
         self.player = Player()
         self.dealer = Dealer()
-        self.gamedeck = Deck(suits, values)
+        self.gamedeck = Deck(suits, scores)
         self.player_score = 0
         self.dealer_score = 0
 
@@ -102,19 +102,23 @@ class Game:
 
     def hit_or_stay(self):
         """Ask for input from person"""
-        print(f'Your socre is currently {self.player_score}')
+        self.calculate_total_hand(self.dealer, self.player)
+        print(f'Your score is currently {self.player_score}')
+
         while self.player_score < 21:
             choice = input('Would you like to hit? y/n ')
             if choice == 'n':
                 print(f'Your score is now {self.player_score}')
+
                 if self.player_score > self.dealer_score:
                     print(f'Your score of {self.player_score} is higher than the dealer\'s score of {self.dealer_score}. You win!!!')
                 else:
                     print(f'Your score of {self.player_score} is lower than the dealer\'s score of {self.dealer_score}. Sorry, you lose.')
-             
-            self.hit(self.player)
-            self.calculate_total_hand(self.dealer, self.player)
-            print(f'Your score is now {self.player_score}')
+                break
+            else: 
+                self.hit(self.player)
+                self.calculate_total_hand(self.dealer, self.player)
+                print(f'Your score is now {self.player_score}')
 
         else:
             if self.player_score == 21:
@@ -149,13 +153,13 @@ class Game:
     #     else:
     #         print('Sorry, you lost.')
 
-game = Game(SUITS, VALUES)
+game = Game(SUITS, SCORES)
 game.deal_cards()
     #gamedeck.show_cards()
-game.hit(game.player)
+# game.hit(game.player)
 game.hit_or_stay()
-game.hit_dealer(game.dealer)
-game.calculate_total_hand()
+game.hit_dealer()
+game.calculate_total_hand(game.dealer, game.player)
     # game.hit_dealer()
     # game.winner()
 

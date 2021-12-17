@@ -86,6 +86,7 @@ class Game:
         self.player_score = 0
         self.dealer_score = 0
 
+                
     def deal_cards(self):
         for i in range(2):
             self.dealer.hand.append(self.gamedeck.draw_card())
@@ -93,8 +94,17 @@ class Game:
         self.dealer.show_hand()
         self.player.show_hand()
 
+    def hit_dealer(self):
+        while self.dealer_score < 17:
+            self.hit(self.dealer)
+            self.calculate_total_hand(self.dealer, self.player)
+            print(f'Dealer score is now {self.dealer_score}')
+            
+            if self.dealer_score > 21:
+                print('Dealer busts! Player wins!!')
+
 # This function is for when the dealer and player want another card (one).
-# Needs an if, elif, else statement for if the player wants to stay or be hit.
+
     def hit(self, person):
         """Adds card to player's hand"""
         person.hand.append(self.gamedeck.draw_card())
@@ -124,7 +134,7 @@ class Game:
             if self.player_score == 21:
                 print(f'You won Blackjack!')
             else:
-                print(f'Your score is now {self.player_score}. That\'s a bust.')
+                print(f'That\'s a bust. You lose.')
             
             # self.player.show_hand()
 
@@ -138,30 +148,25 @@ class Game:
         self.player_score = sum(player_hand_score)
         self.dealer_score = sum(dealer_hand_score)
 
-    def hit_dealer(self):
-        while self.dealer_score < 17:
-            self.hit(self.dealer)
-            self.calculate_total_hand(self.dealer, self.player)
-            if self.dealer_score > 21:
-                print('Dealer busts! Player wins!!')
-        else:
-            self.dealer.show_hand()
+             
+        #else:
+            #self.dealer.show_hand()
 
     # def winner(self, dealer, player):
     #     if player.show_hand > 17 and player.show_hand <= 21 and player.show_hand > dealer.show_hand:
-    #         print('Congrats. You won!!')
+    #         print('Congrats {self.name}. You won!!')
     #     else:
-    #         print('Sorry, you lost.')
+    #         print('Sorry, the dealer won and you lost.')
 
 game = Game(SUITS, SCORES)
 game.deal_cards()
-    #gamedeck.show_cards()
+game.hit_dealer()
+# gamedeck.show_cards()
 # game.hit(game.player)
 game.hit_or_stay()
-game.hit_dealer()
 game.calculate_total_hand(game.dealer, game.player)
     # game.hit_dealer()
-    # game.winner()
+# game.winner(game.dealer, game.player)
 
 # Still need to make funciton work for hit/stay
 # Need function to tally score
